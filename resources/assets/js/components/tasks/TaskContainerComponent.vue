@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-sm-12 col-md-8 col-lg-8">
-        <form-task-component @addTask="addTask"></form-task-component>
+        <form-task-component ref="formTask" @addTask="addTask" @loadTasks="loadTasks"></form-task-component>
         <div class="list-group mt-1">
           <task-component
             v-for="(task, index) in tasks"
@@ -30,9 +30,25 @@
         },
         methods: {
             loadTasks() {
+                this.tasks = [];
                 axios.get('tasks')
-                     .then(response => this.tasks = response.data.tasks)
-                     .catch(error => alert(error));
+                     .then(response => {
+                         this.tasks = response.data.tasks;
+                         if(this.tasks.length === 0) {
+                             swal({
+                                 type: 'info',
+                                 text: 'Your task list is empty'
+                             });
+                         }
+                     })
+                     .catch(error => {
+                         swal({
+                             type: 'error',
+                             text: 'Something went wrong!, try it again'
+                         });
+                     }).then(() => {
+                         this.$refs.formTask.loadingMode = false;
+                     });
             },
             addTask(task) {
                 this.tasks.push(task);

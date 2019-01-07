@@ -1,7 +1,7 @@
 <template>
   <div class="list-group-item flex-column align-items-start">
     <div v-if="editMode">
-      <form id="formTask" @submit.prevent="update" novalidate>
+      <form :id="`formEditTask${task.id}`" @submit.prevent="update" novalidate>
         <div class="form-row mb-3">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <label for="task">Task</label>
@@ -14,7 +14,11 @@
             <div class="invalid-feedback">this field is required</div>
           </div>
         </div>
-        <button type="submit" class="btn btn-outline-success">Save</button>
+        <button class="btn btn-outline-success" type="button" v-if="updatingMode" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          updating...
+        </button>
+        <button type="submit" class="btn btn-outline-success" v-else>Update</button>
         <button type="button" class="btn btn-outline-secondary" @click="cancelEdit">Cancel</button>
       </form>
     </div>
@@ -23,15 +27,18 @@
         <h5 class="mb-1">{{ task.title }}</h5>
         <small class="text-muted">
           <button class="btn btn-outline-primary" title="edit task" @click="edit">
-            <i class="fas fa-edit"></i>
+            edit
           </button>
-          <button class="btn btn-outline-danger" title="delete task" @click="destroy">
-            <i class="fas fa-trash-alt"></i>
+          <button type="button" class="btn btn-outline-danger" v-if="deletingMode" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </button>
+          <button v-else type="button" class="btn btn-outline-danger" title="delete task" @click="destroy">
+            delete
           </button>
         </small>
       </div>
       <p class="mb-1">{{ task.description }}</p>
-      <small class="text-muted">Created at: {{ task.created_at }} - Updated at: {{ task.updated_at }}</small>
+      <small class="text-muted">Created at: {{ formatCreatedAt }} - Updated at: {{ formatUpdatedAt }}</small>
     </div>
   </div>
 </template>
@@ -43,6 +50,8 @@
         data() {
             return {
                 editMode: false,
+                updatingMode: false,
+                deletingMode: false,
                 previousTask: {}
             };
         },
@@ -57,17 +66,45 @@
                 this.previousTask = {};
             },
             update() {
-                axios.put(`tasks/${this.task.id}`, this.task)
-                     .then(response => {
-                         this.editMode = false;
-                         this.$emit('updateTask', response.data.task);
-                     })
-                     .catch(error => alert(error));
+                let form = document.getElementById(`formEditTask${this.task.id}`);
+                if(form.checkValidity()) {
+                    this.updatingMode = true;
+                  axios.put(`tasks/${this.task.id}`, this.task)
+                       .then(response => {
+                           this.editMode = false;
+                           this.$set(this.task, 'updated_at', response.data.task.updated_at);
+                           this.$emit('updateTask', this.task);
+                       })
+                       .catch(error => {
+                           swal({
+                               type: 'error',
+                               text: 'Something went wrong!, try it again'
+                           });
+                       })
+                       .then(() => this.updatingMode = false);
+                } else {
+                    form.classList.add('was-validated');
+                }
             },
             destroy() {
+                this.deletingMode = true;
                 axios.delete(`tasks/${this.task.id}`)
                      .then(response => this.$emit('deleteTask'))
-                     .catch(error => alert(error));
+                     .catch(error => {
+                         swal({
+                             type: 'error',
+                             text: 'Something went wrong!, try it again'
+                         });
+                     })
+                     .then(() => this.deletingMode = false);
+            }
+        },
+        computed: {
+            formatCreatedAt() {
+                return moment(this.task.created_at).format('DD-MM-YYYY HH:mm');
+            },
+            formatUpdatedAt() {
+                return moment(this.task.updated_at).format('DD-MM-YYYY HH:mm');
             }
         }
     }

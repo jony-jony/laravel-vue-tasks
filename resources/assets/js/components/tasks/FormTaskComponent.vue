@@ -15,7 +15,16 @@
             <div class="invalid-feedback">this field is required</div>
           </div>
         </div>
-        <button type="submit" class="btn btn-outline-success">Save</button>
+        <button type="button" class="btn btn-outline-success" v-if="savingMode" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          saving...
+        </button>
+        <button type="submit" class="btn btn-outline-success" v-else>Save</button>
+        <button type="button" class="btn btn-outline-info" v-if="loadingMode" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          reloading...
+        </button>
+        <button type="button" class="btn btn-outline-info" v-else @click="loadTasks">Reload tasks</button>
       </form>
     </div>
   </div>
@@ -27,14 +36,21 @@
         data() {
             return {
                 title: '',
-                description: ''
+                description: '',
+                loadingMode: false,
+                savingMode: false,
             };
         },
         methods: {
+            loadTasks() {
+                this.loadingMode = true;
+                this.$emit('loadTasks');
+            },
             store() {
                 let form = document.getElementById('formTask');
                 if(form.checkValidity()) {
                     form.classList.remove('was-validated');
+                    this.savingMode = true;
                     let task = {
                         title: this.title,
                         description: this.description
@@ -45,7 +61,13 @@
                              this.description = '';
                              this.$emit('addTask', response.data.task);
                          })
-                         .catch(error => alert(error));
+                         .catch(error => {
+                             swal({
+                                 type: 'error',
+                                 text: 'Something went wrong!, try it again'
+                             });
+                         })
+                         .then(() => this.savingMode = false);
                 } else {
                     form.classList.add('was-validated');
                 }
