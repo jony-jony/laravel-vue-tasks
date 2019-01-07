@@ -36,13 +36,16 @@
                 if(form.checkValidity()) {
                     form.classList.remove('was-validated');
                     let task = {
-                        id: 2,
                         title: this.title,
                         description: this.description
                     };
-                    this.$emit('addTask', task);
-                    this.title = '';
-                    this.description = '';
+                    axios.post('tasks', task)
+                         .then(response => {
+                             this.title = '';
+                             this.description = '';
+                             this.$emit('addTask', response.data.task);
+                         })
+                         .catch(error => alert(error));
                 } else {
                     form.classList.add('was-validated');
                 }

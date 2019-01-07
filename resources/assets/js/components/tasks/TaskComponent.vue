@@ -57,12 +57,17 @@
                 this.previousTask = {};
             },
             update() {
-                this.editMode = false;
-                this.task.updated_at = moment().format('DD-MM-YYYY HH:mm');
-                this.$emit('updateTask', this.task);
+                axios.put(`tasks/${this.task.id}`, this.task)
+                     .then(response => {
+                         this.editMode = false;
+                         this.$emit('updateTask', response.data.task);
+                     })
+                     .catch(error => alert(error));
             },
             destroy() {
-                this.$emit('deleteTask');
+                axios.delete(`tasks/${this.task.id}`)
+                     .then(response => this.$emit('deleteTask'))
+                     .catch(error => alert(error));
             }
         }
     }

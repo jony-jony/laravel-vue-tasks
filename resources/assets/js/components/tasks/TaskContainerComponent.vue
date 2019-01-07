@@ -25,7 +25,15 @@
                 tasks: []
             };
         },
+        created() {
+            this.loadTasks();
+        },
         methods: {
+            loadTasks() {
+                axios.get('tasks')
+                     .then(response => this.tasks = response.data.tasks)
+                     .catch(error => alert(error));
+            },
             addTask(task) {
                 this.tasks.push(task);
             },
