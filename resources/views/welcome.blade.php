@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   </head>
   <body>
-    <div id="app">
-      <h1>Laravel - Vue</h1>
+    <div id="app" class="mt-5">
+      <task-container-component></task-container-component>
     </div>
     <script src="{{ mix('js/app.js') }}"></script>
   </body>
