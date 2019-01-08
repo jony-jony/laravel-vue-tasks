@@ -27,13 +27,19 @@
         <h5 class="mb-1">{{ task.title }}</h5>
         <small class="text-muted">
           <button class="btn btn-outline-primary" title="edit task" @click="edit">
-            edit
+            Edit
           </button>
           <button type="button" class="btn btn-outline-danger" v-if="deletingMode" disabled>
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           </button>
-          <button v-else type="button" class="btn btn-outline-danger" title="delete task" @click="destroy">
-            delete
+          <button type="button" class="btn btn-outline-danger" title="delete task" v-else @click="destroy">
+            Delete
+          </button>
+          <button type="button" class="btn btn-outline-success" v-if="finishMode" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-outline-success" title="finish task" v-else @click="finish">
+            Finish
           </button>
         </small>
       </div>
@@ -52,6 +58,7 @@
                 editMode: false,
                 updatingMode: false,
                 deletingMode: false,
+                finishMode: false,
                 previousTask: {}
             };
         },
@@ -69,19 +76,22 @@
                 let form = document.getElementById(`formEditTask${this.task.id}`);
                 if(form.checkValidity()) {
                     this.updatingMode = true;
-                  axios.put(`tasks/${this.task.id}`, this.task)
-                       .then(response => {
-                           this.editMode = false;
-                           this.$set(this.task, 'updated_at', response.data.task.updated_at);
-                           this.$emit('updateTask', this.task);
-                       })
-                       .catch(error => {
-                           swal({
-                               type: 'error',
-                               text: 'Something went wrong!, try it again'
-                           });
-                       })
-                       .then(() => this.updatingMode = false);
+                    let task = {
+                        title: this.task.title,
+                        description: this.task.description,
+                    };
+                    axios.put(`tasks/${this.task.id}`, task)
+                         .then(response => {
+                             this.editMode = false;
+                             this.task.updated_at = moment().toDate();
+                         })
+                         .catch(error => {
+                             swal({
+                                 type: 'error',
+                                 text: 'Something went wrong!, try it again'
+                             });
+                         })
+                         .then(() => this.updatingMode = false);
                 } else {
                     form.classList.add('was-validated');
                 }
@@ -97,14 +107,26 @@
                          });
                      })
                      .then(() => this.deletingMode = false);
+            },
+            finish() {
+                this.finishMode = true;
+                axios.put(`/tasks/${this.task.id}/finish`)
+                     .then(response => this.$emit('deleteTask'))
+                     .catch(error => {
+                         swal({
+                             type: 'error',
+                             text: 'Something went wrong!, try it again'
+                         });
+                     })
+                     .then(() => this.finishMode = false);
             }
         },
         computed: {
             formatCreatedAt() {
-                return moment(this.task.created_at).format('DD-MM-YYYY HH:mm');
+                return moment(this.task.created_at).format('DD-MM-YYYY hh:mm A');
             },
             formatUpdatedAt() {
-                return moment(this.task.updated_at).format('DD-MM-YYYY HH:mm');
+                return moment(this.task.updated_at).format('DD-MM-YYYY hh:mm A');
             }
         }
     }

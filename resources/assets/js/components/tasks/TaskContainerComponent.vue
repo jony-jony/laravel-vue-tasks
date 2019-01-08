@@ -8,7 +8,6 @@
             v-for="(task, index) in tasks"
             :key="task.id"
             :task="task"
-            @updateTask="updateTask(index, ...arguments)"
             @deleteTask="deleteTask(index, ...arguments)">
           </task-component>
         </div>
@@ -52,9 +51,6 @@
             },
             addTask(task) {
                 this.tasks.push(task);
-            },
-            updateTask(index, task) {
-                this.tasks[index] = task;
             },
             deleteTask(index) {
                 this.tasks.splice(index, 1);

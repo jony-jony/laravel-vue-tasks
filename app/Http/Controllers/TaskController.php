@@ -14,7 +14,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
+        $tasks = Task::where('finished', false)->get();
 
         $data = [
             'tasks' => $tasks,
@@ -49,16 +49,9 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $task = Task::findOrFail($id);
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->save();
+        Task::where('id', $id)->update($request->all());
 
-        $data = [
-            'task' => $task,
-        ];
-
-        return response()->json($data);
+        return response()->json([]);
     }
 
     /**
@@ -70,6 +63,19 @@ class TaskController extends Controller
     public function destroy($id)
     {
         Task::destroy($id);
+
+        return response()->json([]);
+    }
+
+    /**
+     * Finish task.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function finish($id)
+    {
+        Task::where('id', $id)->update(['finished' => true]);
 
         return response()->json([]);
     }
