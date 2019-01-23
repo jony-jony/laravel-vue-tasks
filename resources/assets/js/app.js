@@ -6,10 +6,9 @@
  */
 
 require('./bootstrap');
-
-window.Vue = require('vue');
-
-axios.defaults.baseURL = `${process.env.MIX_APP_URL}/api/`;
+import Vue from 'vue';
+import router from './router';
+import App from './components/App';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -17,10 +16,8 @@ axios.defaults.baseURL = `${process.env.MIX_APP_URL}/api/`;
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('task-container-component', require('./components/tasks/TaskContainerComponent'));
-Vue.component('form-task-component', require('./components/tasks/FormTaskComponent'));
-Vue.component('task-component', require('./components/tasks/TaskComponent'));
-
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    router,
+    render: h => h(App)
 });

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <main-layout>
     <div class="row justify-content-center">
       <div class="col-sm-12 col-md-8 col-lg-8">
         <form-task-component ref="formTask" @addTask="addTask" @loadTasks="loadTasks"></form-task-component>
@@ -13,12 +13,17 @@
         </div>
       </div>
     </div>
-  </div>
+  </main-layout>
 </template>
 
 <script>
+    import MainLayout from '../layouts/MainLayout';
+    import FormTaskComponent from './FormTaskComponent';
+    import TaskComponent from './TaskComponent';
+
     export default {
         name: 'TaskContainerComponent',
+        components: {MainLayout, FormTaskComponent, TaskComponent},
         data() {
             return {
                 tasks: []

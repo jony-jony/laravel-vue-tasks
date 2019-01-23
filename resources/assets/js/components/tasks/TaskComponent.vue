@@ -69,7 +69,7 @@
             },
             cancelEdit() {
                 this.editMode = false;
-                this.task = this.previousTask;
+                Object.assign(this.task, this.previousTask);
                 this.previousTask = {};
             },
             update() {
