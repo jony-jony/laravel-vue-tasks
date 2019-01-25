@@ -79,4 +79,20 @@ class TaskController extends Controller
 
         return response()->json([]);
     }
+
+    /**
+     * Finished tasks.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function finishedTasks()
+    {
+        $finishedTasks = Task::where('finished', true)->get();
+
+        $data = [
+            'finishedTasks' => $finishedTasks,
+        ];
+
+        return response()->json($data);
+    }
 }

@@ -16,6 +16,14 @@ import App from './components/App';
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.mixin({
+    methods: {
+        formatDate(date) {
+            return moment(date).format('DD-MM-YYYY hh:mm A');
+        }
+    }
+});
+
 const app = new Vue({
     el: '#app',
     router,

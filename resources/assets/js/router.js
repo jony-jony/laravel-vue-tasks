@@ -13,6 +13,10 @@ export default new VueRouter({
         {
             path: '/tasks',
             component: require('./components/tasks/TaskContainerComponent')
+        },
+        {
+            path: '/finished-tasks',
+            component: require('./components/tasks/FinishedTasksComponent')
         }
     ]
 });

@@ -10,6 +10,9 @@
         <router-link tag="li" to="/tasks" class="nav-item" active-class="active">
           <a class="nav-link">My Tasks</a>
         </router-link>
+        <router-link tag="li" to="/finished-tasks" class="nav-item" active-class="active">
+          <a class="nav-link">Finished Tasks</a>
+        </router-link>
       </ul>
     </div>
   </nav>

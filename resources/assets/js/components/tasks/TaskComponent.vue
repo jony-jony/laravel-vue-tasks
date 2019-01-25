@@ -44,7 +44,7 @@
         </small>
       </div>
       <p class="mb-1">{{ task.description }}</p>
-      <small class="text-muted">Created at: {{ formatCreatedAt }} - Updated at: {{ formatUpdatedAt }}</small>
+      <small class="text-muted">Created at: {{ formatDate(task.created_at) }} - Updated at: {{ formatDate(task.updated_at) }}</small>
     </div>
   </div>
 </template>
@@ -110,7 +110,7 @@
             },
             finish() {
                 this.finishMode = true;
-                axios.put(`/tasks/${this.task.id}/finish`)
+                axios.put(`tasks/${this.task.id}/finish`)
                      .then(response => this.$emit('deleteTask'))
                      .catch(error => {
                          swal({
@@ -119,14 +119,6 @@
                          });
                      })
                      .then(() => this.finishMode = false);
-            }
-        },
-        computed: {
-            formatCreatedAt() {
-                return moment(this.task.created_at).format('DD-MM-YYYY hh:mm A');
-            },
-            formatUpdatedAt() {
-                return moment(this.task.updated_at).format('DD-MM-YYYY hh:mm A');
             }
         }
     }
