@@ -4,6 +4,7 @@
       <div class="col-sm-12 col-md-8 col-lg-8">
         <form-task-component ref="formTask" @addTask="addTask" @loadTasks="loadTasks"></form-task-component>
         <div class="list-group mt-1">
+          <loader :showLoading="loading"/>
           <task-component
             v-for="(task, index) in tasks"
             :key="task.id"
@@ -26,7 +27,8 @@
         components: {MainLayout, FormTaskComponent, TaskComponent},
         data() {
             return {
-                tasks: []
+                tasks: [],
+                loading: true
             };
         },
         created() {
@@ -35,6 +37,7 @@
         methods: {
             loadTasks() {
                 this.tasks = [];
+                this.loading = true;
                 axios.get('tasks')
                      .then(response => {
                          this.tasks = response.data.tasks;
@@ -52,6 +55,7 @@
                          });
                      }).then(() => {
                          this.$refs.formTask.loadingMode = false;
+                         this.loading = false;
                      });
             },
             addTask(task) {

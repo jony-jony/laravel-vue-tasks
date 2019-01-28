@@ -16,6 +16,8 @@ import App from './components/App';
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.component('Loader', require('./components/Loader'));
+
 Vue.mixin({
     methods: {
         formatDate(date) {

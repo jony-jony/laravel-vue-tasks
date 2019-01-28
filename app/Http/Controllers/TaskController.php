@@ -87,7 +87,7 @@ class TaskController extends Controller
      */
     public function finishedTasks()
     {
-        $finishedTasks = Task::where('finished', true)->get();
+        $finishedTasks = Task::where('finished', true)->paginate(5);
 
         $data = [
             'finishedTasks' => $finishedTasks,
