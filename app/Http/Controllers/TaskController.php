@@ -87,12 +87,36 @@ class TaskController extends Controller
      */
     public function finishedTasks()
     {
-        $finishedTasks = Task::where('finished', true)->paginate(5);
+        $finishedTasks = Task::where('finished', true)->orderBy('id', 'DESC')->paginate(5);
 
         $data = [
             'finishedTasks' => $finishedTasks,
         ];
 
         return response()->json($data);
+    }
+
+    /**
+     * Restore finished task.
+     *
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restoreFinished($id){
+        Task::where('id', $id)->update(['finished' => false]);
+
+        return response()->json([]);
+    }
+
+    /**
+     * Restore deleted task.
+     *
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restoreDeleted($id){
+        Task::where('id', $id)->restore();
+
+        return response()->json([]);
     }
 }

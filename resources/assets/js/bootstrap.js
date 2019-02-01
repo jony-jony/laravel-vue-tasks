@@ -2,7 +2,6 @@
 window._ = require('lodash');
 window.moment = require('moment');
 window.swal = require('sweetalert2');
-require('@fortawesome/fontawesome-free/js/all.min');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -13,8 +12,6 @@ require('@fortawesome/fontawesome-free/js/all.min');
 try {
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap');
 } catch (e) {}
 
 /**
@@ -37,7 +34,7 @@ let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-    window.axios.defaults.baseURL = `${process.env.MIX_APP_URL}/api/`;
+    window.axios.defaults.baseURL = `${process.env.MIX_APP_URL}/api`;
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }

@@ -1,19 +1,14 @@
 <template>
-  <div class="list-group-item d-flex justify-content-center p-4" v-if="showLoading">
-    <div class="mr-2">
-      <i class="text-primary fas fa-sync fa-spin"></i>
-    </div>
-    <span>Loading...</span>
-  </div>
+  <v-card>
+    <v-card-text class="primary--text text-xs-center">
+      <font-awesome-icon color="primary--text" icon="sync" spin/>
+      <span>Loading...</span>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
     export default {
-        name: "Loader",
-        props: ['showLoading']
+        name: "Loader"
     }
 </script>
-
-<style scoped>
-
-</style>

@@ -12,11 +12,11 @@ export default new VueRouter({
         },
         {
             path: '/tasks',
-            component: require('./components/tasks/TaskContainerComponent')
+            component: require('./components/tasks/TasksContainer')
         },
         {
             path: '/finished-tasks',
-            component: require('./components/tasks/FinishedTasksComponent')
+            component: require('./components/tasks/FinishedTasks')
         }
     ]
 });

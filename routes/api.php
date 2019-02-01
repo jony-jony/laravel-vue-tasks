@@ -18,5 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::put('tasks/{id}/finish', 'TaskController@finish');
+Route::put('tasks/{id}/restore-finished', 'TaskController@restoreFinished');
+Route::put('tasks/{id}/restore-deleted', 'TaskController@restoreDeleted');
 Route::get('finished-tasks', 'TaskController@finishedTasks');
 Route::apiResource('tasks', 'TaskController');
